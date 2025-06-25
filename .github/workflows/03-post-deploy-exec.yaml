@@ -53,3 +53,11 @@ jobs:
    #executar os testes e2e
       - name: Executando Testes e2e
         run: yarn run e2e
+
+   #sobe arquivos relevantes da execução para baixar depois
+      - uses: actions/upload-artifact@v4
+        #se o pipeline ate esse ponto nao for cancelado ate esse ponto, executa os passos abaixo
+        if: ${{ !cancelled() }}
+        with: 
+          name: relatorio
+          path: ./playwright-report      
