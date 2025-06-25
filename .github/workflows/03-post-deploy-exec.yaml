@@ -21,6 +21,12 @@ jobs:
     #maquina que o job vai executar
     runs-on: ubuntu-latest
 
+    # condicional - if
+    # `${ expressao }`
+    # colocar condição para executar apenas se a execução do n1 for com sucesso
+
+    if: ${{ github.event.workflow_run.conclusion == 'success'}}
+
 #passos do script de build
     steps:
     #clone do projeto
