@@ -1,9 +1,8 @@
 # CI de Nível 04 - Disparo dos testes dentro do pipe de dev
 
-
 name: 'Execução Integrada'
 
-on: 
+on:
   workflow_dispatch:
 
 jobs:
@@ -22,7 +21,7 @@ jobs:
       - name: Checando padronização do código
         run: yarn lint
 
-  unidade: 
+  unidade:
     runs-on: ubuntu-latest
 
     steps:
@@ -37,45 +36,44 @@ jobs:
       - name: Executando testes de unidade
         run: yarn test
 
-  e2e-tests: 
+  e2e-tests:
     runs-on: ubuntu-latest
 
     steps:
-    #clone do projeto
+      #clone do projeto
       - uses: actions/checkout@v4
 
-    #instalacao do node
+      #instalacao do node
       - uses: actions/setup-node@v4
         with:
           node-version: 22.x
-        
 
-    #instalacao do Yarn
+      #instalacao do Yarn
       - name: Instalando Yarn
         run: npm install -g yarn
 
-   #instalação das dependências
+      #instalação das dependências
       - name: Instalando dependências
         run: yarn
 
-   #instalação do Playwrigth
+      #instalação do Playwrigth
       - name: Instalando Playwright
         run: yarn playwright install
 
-   #executar os testes e2e
+      #executar os testes e2e
       - name: Executando Testes e2e
         run: yarn run e2e
 
       - uses: actions/upload-artifact@v4
         #se o pipeline ate esse ponto nao for cancelado ate esse ponto, executa os passos abaixo
         if: ${{ !cancelled() }}
-        with: 
+        with:
           name: relatorio
-          path: ./playwright-report   
+          path: ./playwright-report
 
-  deploy: 
+  deploy:
     runs-on: ubuntu-latest
 
-    steps: 
+    steps:
       - name: Simulação do Deploy
         run: echo "simulando o deploy com sucesso"

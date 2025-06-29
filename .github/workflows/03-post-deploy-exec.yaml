@@ -3,21 +3,19 @@
 # nome do nosso pipeline
 name: 'Execução por Deploy'
 
-
 #regras de disparo (ou gatilhos ou triggers)
 #gatilho de execução manual = workflow_dispatch
 #gatilho de execução a partir de outro pipe = workflow_run
 
-on: 
+on:
   workflow_run:
     workflows: ['Execução Manual']
     types:
       - completed
 
 # trabalhos/tarefas dentro do pipeline = jobs
-jobs:   
+jobs:
   e2e-tests:
-
     #maquina que o job vai executar
     runs-on: ubuntu-latest
 
@@ -27,37 +25,36 @@ jobs:
 
     if: ${{ github.event.workflow_run.conclusion == 'success'}}
 
-#passos do script de build
+    #passos do script de build
     steps:
-    #clone do projeto
+      #clone do projeto
       - uses: actions/checkout@v4
 
-    #instalacao do node
+      #instalacao do node
       - uses: actions/setup-node@v4
         with:
           node-version: 22.x
-        
 
-    #instalacao do Yarn
+      #instalacao do Yarn
       - name: Insatalando Yarn
         run: npm instal -g yarn
 
-   #instalação das dependências
+      #instalação das dependências
       - name: Instalando dependências
         run: yarn
 
-   #instalação do Playwrigth
+      #instalação do Playwrigth
       - name: Instalando Playwright
         run: yarn playwright install
 
-   #executar os testes e2e
+      #executar os testes e2e
       - name: Executando Testes e2e
         run: yarn run e2e
 
-   #sobe arquivos relevantes da execução para baixar depois
+      #sobe arquivos relevantes da execução para baixar depois
       - uses: actions/upload-artifact@v4
         #se o pipeline ate esse ponto nao for cancelado ate esse ponto, executa os passos abaixo
         if: ${{ !cancelled() }}
-        with: 
+        with:
           name: relatorio
-          path: ./playwright-report      
+          path: ./playwright-report
